@@ -19,26 +19,26 @@ public class Principal {
             //Solicitando cep
             System.out.print("Informe o seu cep: ");
             resp = scan.nextLine();
-
-            //Validando resposta
             if (resp.equals("sair")) {
                 break;
             }
 
-            Validadores validaCEP = new Validadores();
-            if (validaCEP.validadores(cep.getCep(resp))  == false){
-                System.out.println("CEP invalido");
-            }else{
-                try {
-                    Endereco endereco = cep.getCep(resp);
-                    GerarArquivoComCeps gerarArquivoComCeps = new GerarArquivoComCeps();
-                    cepsArmazenados.add(endereco);
-                    gerarArquivoComCeps.gerarArq(cepsArmazenados);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            //Validar resposta
+            Validadores v = new Validadores();
+            if (v.tamanhoCep(resp)) {
+                Endereco end = cep.getCep(resp);
+                if (v.cepInvalido(end) == true) {
+                    try {
+                        GerarArquivoComCeps g = new GerarArquivoComCeps();
+                        cepsArmazenados.add(end);
+                        g.gerarArq(cepsArmazenados);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
+
 
         if (cepsArmazenados.size() == 0) {
             System.out.println("Nenhum cep foi informado");
