@@ -1,4 +1,5 @@
 import GeradoraDeArquivos.GerarArquivoComCeps;
+import MetodosRapidos.Validadores;
 import Request.BuscaCep;
 import Records.Endereco;
 
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
-
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         BuscaCep cep = new BuscaCep();
@@ -16,7 +16,6 @@ public class Principal {
         List<Endereco> cepsArmazenados = new ArrayList<>();
 
         while (!resp.equals("sair")) {
-
             //Solicitando cep
             System.out.print("Informe o seu cep: ");
             resp = scan.nextLine();
@@ -24,30 +23,26 @@ public class Principal {
             //Validando resposta
             if (resp.equals("sair")) {
                 break;
+            }
 
-            } else if(resp.length() < 8 || resp.length() > 9 ){ //Valida tamanho
-                System.out.println("Cep de tamanho invalido");
-
-            }else {
-                Endereco endereco = (cep.getCep(resp));
-                if (endereco.cep() == null){//Valida se o campo é nulo
-                    System.out.println("CEP invalido");
-                }else{
-                    GerarArquivoComCeps gerar = new GerarArquivoComCeps();
+            Validadores validaCEP = new Validadores();
+            if (validaCEP.validadores(cep.getCep(resp))  == false){
+                System.out.println("CEP invalido");
+            }else{
+                try {
+                    Endereco endereco = cep.getCep(resp);
+                    GerarArquivoComCeps gerarArquivoComCeps = new GerarArquivoComCeps();
                     cepsArmazenados.add(endereco);
-                    try {
-                        gerar.gerarArq(cepsArmazenados);
-                    } catch (IOException e) {
-                        System.out.println("CEP invalido");
-                        throw new RuntimeException(e);
-                    }
+                    gerarArquivoComCeps.gerarArq(cepsArmazenados);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
 
-        if(cepsArmazenados.size() == 0){
+        if (cepsArmazenados.size() == 0) {
             System.out.println("Nenhum cep foi informado");
-        }else{
+        } else {
             System.out.println("CEPS INFORMADOS");
             System.out.println(cepsArmazenados.toString());
         }
