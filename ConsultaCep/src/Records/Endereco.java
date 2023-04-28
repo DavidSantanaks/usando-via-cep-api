@@ -10,7 +10,6 @@ public record Endereco(String cep, String logradouro, String bairro, String loca
                 "RUA: " + logradouro + '\'' +
                 "BAIRRO: " + bairro + '\'' +
                 "CIDADE: " + localidade + '\'' +
-                "ESTADO/UF: " + uf + '\'' +
-                '}';
+                "ESTADO/UF: " + uf + '\'';
     }
 }
